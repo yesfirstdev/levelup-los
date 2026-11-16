@@ -12,7 +12,11 @@ function definition(fn: string): string {
     .reverse();
   for (const f of files) {
     const sql = readFileSync(resolve(dir, f), "utf8");
-    const at = sql.search(new RegExp(`create (or replace )?function public\\.${fn}\\(`));
+    // A baseline can contain several revisions; the last definition wins.
+    const matches = [
+      ...sql.matchAll(new RegExp(`create (or replace )?function public\\.${fn}\\(`, "g")),
+    ];
+    const at = matches.at(-1)?.index ?? -1;
     if (at >= 0) return sql.slice(at, sql.indexOf("end $$;", at));
   }
   throw new Error(`no migration defines ${fn}`);
