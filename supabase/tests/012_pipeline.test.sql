@@ -163,7 +163,7 @@ select lives_ok($$select public.move_pipeline_card('9', 'registered', 'mv-test-r
 select pg_temp.logout();
 select is((select biz_class || '/' || pipeline_stage from public.people where id = '9'), 'apprentice/apprentice',
   'registering makes him an apprentice');
-select is((select business_start_date from public.people where id = '9'), public.workspace_today('w1'),
+select is((select business_start_date from public.people where id = '9'), app_private.workspace_today('w1'),
   'from today');
 select is((select milestone || ':' || from_column from public.pipeline_moves where id = 'mv-test-reg'),
   'registered:first_plan', 'the move records where he came from');

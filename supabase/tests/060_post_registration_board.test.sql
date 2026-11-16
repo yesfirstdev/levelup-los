@@ -100,23 +100,23 @@ insert into public.workspaces (id, name, timezone) values
    case when extract(hour from now() at time zone 'UTC') >= 10 then 'Pacific/Kiritimati' else 'Pacific/Pago_Pago' end);
 -- The first day of this month and of last month, in the team's calendar; and the first instant of this month, in its zone.
 create temp table cal as
-  select date_trunc('month', public.workspace_today('prw'))::date as m0,
-         (date_trunc('month', public.workspace_today('prw')) - interval '1 month')::date as m1,
-         (date_trunc('month', public.workspace_today('prw'))::timestamp at time zone w.timezone) as m0_start
+  select date_trunc('month', app_private.workspace_today('prw'))::date as m0,
+         (date_trunc('month', app_private.workspace_today('prw')) - interval '1 month')::date as m1,
+         (date_trunc('month', app_private.workspace_today('prw'))::timestamp at time zone w.timezone) as m0_start
     from public.workspaces w where w.id = 'prw';
 grant select on cal to public;
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_id, business_start_date)
 select v.id, 'prw', v.name, v.biz, v.sponsor, v.owner, v.bsd
   from cal, lateral (values
-    ('prl',  'Pat Leader',     'ibo',        null::text, null::text, public.workspace_today('prw') - 900),
-    ('pra',  'Alex Mid',       'ibo',        'prl', null, public.workspace_today('prw') - 700),
+    ('prl',  'Pat Leader',     'ibo',        null::text, null::text, app_private.workspace_today('prw') - 900),
+    ('pra',  'Alex Mid',       'ibo',        'prl', null, app_private.workspace_today('prw') - 700),
     ('prb',  'Bo Registered',  'apprentice', 'pra', null, cal.m0),
     ('pre',  'Eve Registered', 'apprentice', 'pra', null, cal.m0 - 1),
-    ('prf',  'Fay Ibo',        'ibo',        'pra', null, public.workspace_today('prw') - 800),
+    ('prf',  'Fay Ibo',        'ibo',        'pra', null, app_private.workspace_today('prw') - 800),
     ('prg',  'Gus Registered', 'apprentice', 'pra', null, cal.m1 - 1),
     ('prh',  'Hal Registered', 'apprentice', 'pra', null, cal.m1),
-    ('prd',  'Dee Deputy',     'apprentice', 'prl', null, public.workspace_today('prw') - 80),
-    ('prx',  'Xavier Outside', 'ibo',        null,  null, public.workspace_today('prw') - 800),
+    ('prd',  'Dee Deputy',     'apprentice', 'prl', null, app_private.workspace_today('prw') - 80),
+    ('prx',  'Xavier Outside', 'ibo',        null,  null, app_private.workspace_today('prw') - 800),
     ('prc',  'Cal Candidate',  'prospect',   'prl', null, null::date),
     ('prp1', 'Pia Prospect',   'prospect',   'pra', null, null),
     ('prcu', 'Cara Customer',  'customer',   null,  'pra', null)) v (id, name, biz, sponsor, owner, bsd);

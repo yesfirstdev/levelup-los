@@ -185,8 +185,8 @@ insert into public.events (id, workspace_id, name, category_id, date, end_date, 
   ('agev-foreign', 'agy', 'Other team''s event', 'agy-conference', '2026-11-10', null, null, null, null, null, null);
 -- Events around today, for the default window and its caps.
 insert into public.events (id, workspace_id, name, category_id, date, end_date)
-select 'agr-' || d, 'agw', 'Relative ' || d, 'agw-conference', public.workspace_today('agw') + d,
-       case when d = 0 then public.workspace_today('agw') + 1 end
+select 'agr-' || d, 'agw', 'Relative ' || d, 'agw-conference', app_private.workspace_today('agw') + d,
+       case when d = 0 then app_private.workspace_today('agw') + 1 end
   from unnest(array[-3, 0, 1, 56, 57, 182, 183]) d;
 
 -- A busy window: more than 500 events are cut at 500 and the result says so.
@@ -333,14 +333,14 @@ select is(jsonb_array_length(pg_temp.lst('2030-01-01', '2030-06-30') -> 'events'
 select is(pg_temp.lst('2030-01-01', '2030-06-30') ->> 'truncated', 'true', 'and truncated says so');
 select is(pg_temp.lst('2030-01-01', '2030-06-30') -> 'events' -> 0 ->> 'id', 'agbig-100', 'in date order (then id)');
 select is(pg_temp.lst('2026-11-01', '2026-12-31') ->> 'truncated', 'false', 'an ordinary window is not truncated');
-select is(pg_temp.lst(null, null) ->> 'from', public.workspace_today('agw')::text, 'from defaults to the team''s today');
-select is(pg_temp.lst(null, null) ->> 'until', (public.workspace_today('agw') + 56)::text, 'until to 8 weeks after it');
+select is(pg_temp.lst(null, null) ->> 'from', app_private.workspace_today('agw')::text, 'from defaults to the team''s today');
+select is(pg_temp.lst(null, null) ->> 'until', (app_private.workspace_today('agw') + 56)::text, 'until to 8 weeks after it');
 select is(pg_temp.lst(null, null) ->> 'capped', 'false', 'not capped');
 select is((select string_agg(x ->> 'id', ',' order by (x ->> 'id') collate "C") from jsonb_array_elements(pg_temp.lst(null, null) -> 'events') x where x ->> 'id' like 'agr-%'),
   'agr-0,agr-1,agr-56', 'the default window holds the event running today, tomorrow''s and the one 56 days out; not the one 3 days ago or 57 days out');
-select is(pg_temp.lst(null, public.workspace_today('agw') + 400) ->> 'until', (public.workspace_today('agw') + 182)::text, 'until is cut back to 26 weeks after from');
-select is(pg_temp.lst(null, public.workspace_today('agw') + 400) ->> 'capped', 'true', 'and capped says so');
-select is((select string_agg(x ->> 'id', ',' order by (x ->> 'id') collate "C") from jsonb_array_elements(pg_temp.lst(null, public.workspace_today('agw') + 400) -> 'events') x where x ->> 'id' like 'agr-%'),
+select is(pg_temp.lst(null, app_private.workspace_today('agw') + 400) ->> 'until', (app_private.workspace_today('agw') + 182)::text, 'until is cut back to 26 weeks after from');
+select is(pg_temp.lst(null, app_private.workspace_today('agw') + 400) ->> 'capped', 'true', 'and capped says so');
+select is((select string_agg(x ->> 'id', ',' order by (x ->> 'id') collate "C") from jsonb_array_elements(pg_temp.lst(null, app_private.workspace_today('agw') + 400) -> 'events') x where x ->> 'id' like 'agr-%'),
   'agr-0,agr-1,agr-182,agr-56,agr-57', 'the event 182 days out is in the capped window, the one 183 days out is not');
 select is(pg_temp.lst('2026-11-10', '2026-11-10') ->> 'until', '2026-11-10', 'a one-day window is allowed');
 select is(public.agent_list_upcoming_events('2026-11-10', '2026-11-09') ->> 'error', 'until must not be before from.', 'until before from is refused with a message');
@@ -392,7 +392,7 @@ select is(public.agent_export_events_ics('2026-11-01', '2026-12-31') -> 'timezon
     {"kind": "STANDARD", "from": "-0500", "to": "-0600", "dtstart": "20251102T020000", "rrule": "FREQ=YEARLY;BYMONTH=11;BYDAY=1SU"}]'::jsonb,
   'Central: daylight time from the second Sunday of March, standard from the first Sunday of November, from the year before the earliest timed series (2025)');
 select is(public.agent_export_events_ics('2026-11-08', '2026-11-09') ->> 'capped', 'false', 'the export takes the same window and cap');
-select is(public.agent_export_events_ics(null, public.workspace_today('agw') + 999) ->> 'capped', 'true', 'cut back to 26 weeks too');
+select is(public.agent_export_events_ics(null, app_private.workspace_today('agw') + 999) ->> 'capped', 'true', 'cut back to 26 weeks too');
 select is(public.agent_export_events_ics('2026-11-10', '2026-11-09') ->> 'error', 'until must not be before from.', 'and refuses until before from');
 select pg_temp.as_postgres();
 update public.event_series set start_time = null, end_time = null where id in ('agsw', 'agsx', 'agsd');
