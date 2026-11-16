@@ -1,0 +1,566 @@
+{
+  "sourceCommit": "9f437735",
+  "project": "hzgnomktnfhsdlodamtp",
+  "manifest": [
+    {
+      "original": "20261012000100_core.sql",
+      "name": "core",
+      "sha256": "5a0e412fdec8a329289bebe64d33e53229cb3bd6bcff5aa9325657518205586f",
+      "bytes": 7118,
+      "applied_sha256": "5a0e412fdec8a329289bebe64d33e53229cb3bd6bcff5aa9325657518205586f",
+      "diff": ""
+    },
+    {
+      "original": "20261012000200_crm.sql",
+      "name": "crm",
+      "sha256": "e0eea5ea0da3026c0bab5da9226dd5eaa6beec8d6c90168cad8e9bc0dab438ab",
+      "bytes": 9990,
+      "applied_sha256": "e0eea5ea0da3026c0bab5da9226dd5eaa6beec8d6c90168cad8e9bc0dab438ab",
+      "diff": ""
+    },
+    {
+      "original": "20261012000300_chat.sql",
+      "name": "chat",
+      "sha256": "880d8adfffdefe4861a31691a9c052f684e80fa7dff8eee604d57284a5341ce1",
+      "bytes": 7640,
+      "applied_sha256": "880d8adfffdefe4861a31691a9c052f684e80fa7dff8eee604d57284a5341ce1",
+      "diff": ""
+    },
+    {
+      "original": "20261012000400_helpers.sql",
+      "name": "helpers",
+      "sha256": "cb95798376298e0ea9681ac2356c4ad1e0d4abed72622bd84b83fbaf946ee2fa",
+      "bytes": 10134,
+      "applied_sha256": "cb95798376298e0ea9681ac2356c4ad1e0d4abed72622bd84b83fbaf946ee2fa",
+      "diff": ""
+    },
+    {
+      "original": "20261012000500_rls_crm.sql",
+      "name": "rls_crm",
+      "sha256": "450bf63ccdf2ffe36c9065075918b769de916710936b55112c2fccda96e1fecb",
+      "bytes": 16922,
+      "applied_sha256": "450bf63ccdf2ffe36c9065075918b769de916710936b55112c2fccda96e1fecb",
+      "diff": ""
+    },
+    {
+      "original": "20261012000600_rls_chat.sql",
+      "name": "rls_chat",
+      "sha256": "056806b27aae4593d05b51b2f36cc14d059faa0abc0a739efa85b7819a96b3fa",
+      "bytes": 14668,
+      "applied_sha256": "056806b27aae4593d05b51b2f36cc14d059faa0abc0a739efa85b7819a96b3fa",
+      "diff": ""
+    },
+    {
+      "original": "20261012000700_rpc.sql",
+      "name": "rpc",
+      "sha256": "f77dd8720eab6c05ea5dff4063d891c4cbad9d31c350edcad5c142d0f56af064",
+      "bytes": 15715,
+      "applied_sha256": "f77dd8720eab6c05ea5dff4063d891c4cbad9d31c350edcad5c142d0f56af064",
+      "diff": ""
+    },
+    {
+      "original": "20261012000800_triggers.sql",
+      "name": "triggers",
+      "sha256": "f7de740652bf0702e73d76be0a70e8ef893ab1bca3396c13345b7203194b617c",
+      "bytes": 28495,
+      "applied_sha256": "12da12820c84efd1a4c0555328388f6be216e53d0261077eb10ec6a7fe1fd0ec",
+      "diff": "--- 20261012000800_triggers.sql\n+++ 20261012000800_triggers.sql\n@@ -695,7 +695,8 @@\n begin\n   if exists (select 1 from pg_available_extensions where name = 'pg_cron') then\n     create extension if not exists pg_cron;\n-    perform cron.schedule('purge-expired-messages', '17 3 * * *', 'select public.purge_expired_messages()');\n+    -- Automatic permanent purge disabled for this fork; function retained for explicit use.\n+    null;\n   else\n     raise notice 'pg_cron not available: call public.purge_expired_messages() from a scheduler instead';\n   end if;\n"
+    },
+    {
+      "original": "20261012000900_storage_realtime.sql",
+      "name": "storage_realtime",
+      "sha256": "039e060a524e47afc8d94ecda4376dbd703621638cd8d8070c49d637983d9a72",
+      "bytes": 3094,
+      "applied_sha256": "039e060a524e47afc8d94ecda4376dbd703621638cd8d8070c49d637983d9a72",
+      "diff": ""
+    },
+    {
+      "original": "20261013000100_client_sync.sql",
+      "name": "client_sync",
+      "sha256": "b11a85898884aa4e9b488f57c78750db433b3eae3428a5a7351878e5f7a8d985",
+      "bytes": 17418,
+      "applied_sha256": "b11a85898884aa4e9b488f57c78750db433b3eae3428a5a7351878e5f7a8d985",
+      "diff": ""
+    },
+    {
+      "original": "20261013000200_chat_pins.sql",
+      "name": "chat_pins",
+      "sha256": "7f0dd52de2979f533c67286663d18fc9b886d96fd55a3c3b67f6e072d0d96651",
+      "bytes": 3744,
+      "applied_sha256": "7f0dd52de2979f533c67286663d18fc9b886d96fd55a3c3b67f6e072d0d96651",
+      "diff": ""
+    },
+    {
+      "original": "20261013000300_library.sql",
+      "name": "library",
+      "sha256": "7ed4892da9da219eda3af07bdea9d77b6c5e4706ed89ce9d81ba7bc945a64614",
+      "bytes": 25933,
+      "applied_sha256": "7ed4892da9da219eda3af07bdea9d77b6c5e4706ed89ce9d81ba7bc945a64614",
+      "diff": ""
+    },
+    {
+      "original": "20261013000400_pipeline.sql",
+      "name": "pipeline",
+      "sha256": "e946c666fd748aaae22307caf6d4c0b8cee4c2fe12993cfd164c92f034b0de63",
+      "bytes": 31350,
+      "applied_sha256": "e946c666fd748aaae22307caf6d4c0b8cee4c2fe12993cfd164c92f034b0de63",
+      "diff": ""
+    },
+    {
+      "original": "20261013000500_pipeline_undo_registration.sql",
+      "name": "pipeline_undo_registration",
+      "sha256": "9fcf49ea3c85d417c60502e8a2d1d9e88ca6e411fb7a01e63eab8abfeef7be1e",
+      "bytes": 2646,
+      "applied_sha256": "9fcf49ea3c85d417c60502e8a2d1d9e88ca6e411fb7a01e63eab8abfeef7be1e",
+      "diff": ""
+    },
+    {
+      "original": "20261014000100_growth_path.sql",
+      "name": "growth_path",
+      "sha256": "fb003dfe5e0abac1b63c71f09b269fcebc06dc1cc3ef851d3045ed12afb8f576",
+      "bytes": 11115,
+      "applied_sha256": "fb003dfe5e0abac1b63c71f09b269fcebc06dc1cc3ef851d3045ed12afb8f576",
+      "diff": ""
+    },
+    {
+      "original": "20261014000500_customer_pipeline.sql",
+      "name": "customer_pipeline",
+      "sha256": "1d569d5949be8515dc99406273baff42bd9c50b3f4707afdea63d340d2102ae3",
+      "bytes": 24791,
+      "applied_sha256": "1d569d5949be8515dc99406273baff42bd9c50b3f4707afdea63d340d2102ae3",
+      "diff": ""
+    },
+    {
+      "original": "20261014001000_event_types.sql",
+      "name": "event_types",
+      "sha256": "96e20f55001d3c0932c9c53b4b636bca82455104e94f3fb7763f6dcc5b203b20",
+      "bytes": 5341,
+      "applied_sha256": "96e20f55001d3c0932c9c53b4b636bca82455104e94f3fb7763f6dcc5b203b20",
+      "diff": ""
+    },
+    {
+      "original": "20261014001500_unlocks_deputies_admin.sql",
+      "name": "unlocks_deputies_admin",
+      "sha256": "104bc3f72c0fc770b3ac43202a89e8612793ff9ea1a25fb1848de556c6aac910",
+      "bytes": 11981,
+      "applied_sha256": "104bc3f72c0fc770b3ac43202a89e8612793ff9ea1a25fb1848de556c6aac910",
+      "diff": ""
+    },
+    {
+      "original": "20261014002000_customer_new_contacts_into_contact.sql",
+      "name": "customer_new_contacts_into_contact",
+      "sha256": "3713171b325d3f6c9cfd247edb2e56a21e8aee0378c30226cb197c9527631936",
+      "bytes": 5865,
+      "applied_sha256": "3713171b325d3f6c9cfd247edb2e56a21e8aee0378c30226cb197c9527631936",
+      "diff": ""
+    },
+    {
+      "original": "20261014002500_pipeline_fixed_columns.sql",
+      "name": "pipeline_fixed_columns",
+      "sha256": "defc86b72c1c760d64e8ee144a7145e9928adfc7c61d5822171b677324cf38d2",
+      "bytes": 6624,
+      "applied_sha256": "defc86b72c1c760d64e8ee144a7145e9928adfc7c61d5822171b677324cf38d2",
+      "diff": ""
+    },
+    {
+      "original": "20261014003000_learning_units.sql",
+      "name": "learning_units",
+      "sha256": "0808c44c954df361cbd79ec8354e94237aeab12e1df546eae5873bdca64d3c00",
+      "bytes": 1033,
+      "applied_sha256": "0808c44c954df361cbd79ec8354e94237aeab12e1df546eae5873bdca64d3c00",
+      "diff": ""
+    },
+    {
+      "original": "20261014004000_learning_goal_items.sql",
+      "name": "learning_goal_items",
+      "sha256": "81f81b55622e5ef9836b2c74ecfc69d5ee73d7b993a7f464282a123bab402818",
+      "bytes": 2800,
+      "applied_sha256": "81f81b55622e5ef9836b2c74ecfc69d5ee73d7b993a7f464282a123bab402818",
+      "diff": ""
+    },
+    {
+      "original": "20261014005000_pipeline_next_steps.sql",
+      "name": "pipeline_next_steps",
+      "sha256": "9cd5d9eea1da5e53070d869081303fca4f095d57de7366a38450e9b6e365c4df",
+      "bytes": 34836,
+      "applied_sha256": "9cd5d9eea1da5e53070d869081303fca4f095d57de7366a38450e9b6e365c4df",
+      "diff": ""
+    },
+    {
+      "original": "20261014009000_event_ticket_url.sql",
+      "name": "event_ticket_url",
+      "sha256": "9e1a4087802e06b8d37a4b6c765f8dfd2e1d3fc620180330c7ac11e6c66d5f26",
+      "bytes": 501,
+      "applied_sha256": "9e1a4087802e06b8d37a4b6c765f8dfd2e1d3fc620180330c7ac11e6c66d5f26",
+      "diff": ""
+    },
+    {
+      "original": "20261014010000_milestone_history.sql",
+      "name": "milestone_history",
+      "sha256": "b8528929adc21c3aecd075a0fe479285d37d304f99518636541f5d6410fa6369",
+      "bytes": 4843,
+      "applied_sha256": "b8528929adc21c3aecd075a0fe479285d37d304f99518636541f5d6410fa6369",
+      "diff": ""
+    },
+    {
+      "original": "20261016000100_contact_rating.sql",
+      "name": "contact_rating",
+      "sha256": "c01375b57f5c6df83781a84e920ad3ee26395ee36afe721c08c02018dbb9e4fd",
+      "bytes": 1635,
+      "applied_sha256": "c01375b57f5c6df83781a84e920ad3ee26395ee36afe721c08c02018dbb9e4fd",
+      "diff": ""
+    },
+    {
+      "original": "20261016000200_move_pipeline_card_rating.sql",
+      "name": "move_pipeline_card_rating",
+      "sha256": "6b026937594ce647b7deb4ac598882eac3ecfdcc5290cc6f9fb3fa7fb293588b",
+      "bytes": 5924,
+      "applied_sha256": "6b026937594ce647b7deb4ac598882eac3ecfdcc5290cc6f9fb3fa7fb293588b",
+      "diff": ""
+    },
+    {
+      "original": "20261016001000_dashboard_layouts.sql",
+      "name": "dashboard_layouts",
+      "sha256": "1a395e28bc9ad4d01c8a08ad326b21dd5cde951b1c7f745d01bca6b200c55bf1",
+      "bytes": 3388,
+      "applied_sha256": "1a395e28bc9ad4d01c8a08ad326b21dd5cde951b1c7f745d01bca6b200c55bf1",
+      "diff": ""
+    },
+    {
+      "original": "20261016001500_referral_source.sql",
+      "name": "referral_source",
+      "sha256": "363b661dfffd9f16adcf34bb9fedd556e645c9fc1efda4fa963bdb2588a15ec6",
+      "bytes": 16606,
+      "applied_sha256": "363b661dfffd9f16adcf34bb9fedd556e645c9fc1efda4fa963bdb2588a15ec6",
+      "diff": ""
+    },
+    {
+      "original": "20261016001600_referred_by.sql",
+      "name": "referred_by",
+      "sha256": "6a0c95de2751f9f72902d0d17a6709d7b01fca5fa100fde4a4d2c6a56ce37b40",
+      "bytes": 4106,
+      "applied_sha256": "6a0c95de2751f9f72902d0d17a6709d7b01fca5fa100fde4a4d2c6a56ce37b40",
+      "diff": ""
+    },
+    {
+      "original": "20261016002000_event_categories.sql",
+      "name": "event_categories",
+      "sha256": "f3e45a6f80d6335c8bae027465f27d704c9a0aa9587322573d2d684360d55131",
+      "bytes": 13484,
+      "applied_sha256": "f3e45a6f80d6335c8bae027465f27d704c9a0aa9587322573d2d684360d55131",
+      "diff": ""
+    },
+    {
+      "original": "20261016002500_feedback.sql",
+      "name": "feedback",
+      "sha256": "16408aec8888b67ab1aec09285506536f7f630d4a4e41533a58c7db039480a1a",
+      "bytes": 5047,
+      "applied_sha256": "16408aec8888b67ab1aec09285506536f7f630d4a4e41533a58c7db039480a1a",
+      "diff": ""
+    },
+    {
+      "original": "20261017000100_stage_names.sql",
+      "name": "stage_names",
+      "sha256": "3900e7ac6ea4a2a19e8d1ae7efa322e64957cf1db0ac8e7f14f7eb34b7eb626d",
+      "bytes": 6075,
+      "applied_sha256": "3900e7ac6ea4a2a19e8d1ae7efa322e64957cf1db0ac8e7f14f7eb34b7eb626d",
+      "diff": ""
+    },
+    {
+      "original": "20261018000100_invite_existing_person.sql",
+      "name": "invite_existing_person",
+      "sha256": "e034e3e3c77f905c257dc823707fe3c8db62de2b116afb5e8853c2b12c484946",
+      "bytes": 13809,
+      "applied_sha256": "e034e3e3c77f905c257dc823707fe3c8db62de2b116afb5e8853c2b12c484946",
+      "diff": ""
+    },
+    {
+      "original": "20261019000100_team_appearance.sql",
+      "name": "team_appearance",
+      "sha256": "4aaca69752c1d62b79353fa8377cfd784a6d4aa381094a79716f20e3a3f222f1",
+      "bytes": 11909,
+      "applied_sha256": "4aaca69752c1d62b79353fa8377cfd784a6d4aa381094a79716f20e3a3f222f1",
+      "diff": ""
+    },
+    {
+      "original": "20261020000100_recurring_events.sql",
+      "name": "recurring_events",
+      "sha256": "46b89d57a6c5902b7576c8fe9fd099e20ee5e58985409d1ffa6c8cbdfe3dba58",
+      "bytes": 38055,
+      "applied_sha256": "46b89d57a6c5902b7576c8fe9fd099e20ee5e58985409d1ffa6c8cbdfe3dba58",
+      "diff": ""
+    },
+    {
+      "original": "20261030000100_event_times.sql",
+      "name": "event_times",
+      "sha256": "b5d5c94ab1b3fec24ee7d636d3741889567d33e4c19c51c0be8155b2294cd2cc",
+      "bytes": 25472,
+      "applied_sha256": "b5d5c94ab1b3fec24ee7d636d3741889567d33e4c19c51c0be8155b2294cd2cc",
+      "diff": ""
+    },
+    {
+      "original": "20261105000100_agent_connector.sql",
+      "name": "agent_connector",
+      "sha256": "f13fab0e3112ddd089fe18933d09274b9f99166b65e8a29427164469b21d4abf",
+      "bytes": 26437,
+      "applied_sha256": "7389aab14e9f0b05e026aed49b739330abbb661f5efc2e3d719070d1f4fab361",
+      "diff": "--- 20261105000100_agent_connector.sql\n+++ 20261105000100_agent_connector.sql\n@@ -611,7 +611,8 @@\n begin\n   if exists (select 1 from pg_available_extensions where name = 'pg_cron') then\n     create extension if not exists pg_cron;\n-    perform cron.schedule('purge-agent-housekeeping', '37 3 * * *', 'select public.purge_agent_housekeeping()');\n+    -- Automatic permanent purge disabled for this fork; function retained for explicit use.\n+    null;\n   else\n     raise notice 'pg_cron not available: call public.purge_agent_housekeeping() from a scheduler instead';\n   end if;\n"
+    },
+    {
+      "original": "20261105000200_agent_tools.sql",
+      "name": "agent_tools",
+      "sha256": "e11b9e0660b2313a0732f886e6705a1d76b934e535c8e69ed97ee43d3189ff6e",
+      "bytes": 36408,
+      "applied_sha256": "e11b9e0660b2313a0732f886e6705a1d76b934e535c8e69ed97ee43d3189ff6e",
+      "diff": ""
+    },
+    {
+      "original": "20261106000100_agent_people_tools.sql",
+      "name": "agent_people_tools",
+      "sha256": "5a83c3f944738fcc17738589eb7e73cb46ab0e51687d432cb415fe7d5a529023",
+      "bytes": 30777,
+      "applied_sha256": "5a83c3f944738fcc17738589eb7e73cb46ab0e51687d432cb415fe7d5a529023",
+      "diff": ""
+    },
+    {
+      "original": "20261108000100_card_tasks.sql",
+      "name": "card_tasks",
+      "sha256": "86d732a699afa4451863ed0b8ab32826c612c31b2a8b8c2cf1414192a3071ad1",
+      "bytes": 66365,
+      "applied_sha256": "86d732a699afa4451863ed0b8ab32826c612c31b2a8b8c2cf1414192a3071ad1",
+      "diff": ""
+    },
+    {
+      "original": "20261109000100_card_followups_conversion.sql",
+      "name": "card_followups_conversion",
+      "sha256": "0cb118d60d799e11f77968bd10dbe9f968c3c148594183290bea613b79fc77f9",
+      "bytes": 6372,
+      "applied_sha256": "0cb118d60d799e11f77968bd10dbe9f968c3c148594183290bea613b79fc77f9",
+      "diff": ""
+    },
+    {
+      "original": "20261110000100_agents_on_by_default.sql",
+      "name": "agents_on_by_default",
+      "sha256": "48cd3eecc727a96b0425b174edd56a56fdc158b8243ddf80f4814db9b4f2c3be",
+      "bytes": 3075,
+      "applied_sha256": "48cd3eecc727a96b0425b174edd56a56fdc158b8243ddf80f4814db9b4f2c3be",
+      "diff": ""
+    },
+    {
+      "original": "20261112000100_pipeline_steps_after_registered.sql",
+      "name": "pipeline_steps_after_registered",
+      "sha256": "019716cb891804adb0d53e2830db48082b57a8096871d300feb1849d86720879",
+      "bytes": 34256,
+      "applied_sha256": "019716cb891804adb0d53e2830db48082b57a8096871d300feb1849d86720879",
+      "diff": ""
+    }
+  ],
+  "applied": [
+    {
+      "original": "20261012000100_core.sql",
+      "name": "core",
+      "sha256": "5a0e412fdec8a329289bebe64d33e53229cb3bd6bcff5aa9325657518205586f",
+      "bytes": 7118,
+      "version": "20261116214535",
+      "target": "20261116214535_core.sql"
+    },
+    {
+      "original": "20261012000200_crm.sql",
+      "name": "crm",
+      "sha256": "e0eea5ea0da3026c0bab5da9226dd5eaa6beec8d6c90168cad8e9bc0dab438ab",
+      "bytes": 9990,
+      "version": "20261116214646",
+      "target": "20261116214646_crm.sql"
+    },
+    {
+      "original": "20261012000300_chat.sql",
+      "name": "chat",
+      "sha256": "880d8adfffdefe4861a31691a9c052f684e80fa7dff8eee604d57284a5341ce1",
+      "bytes": 7640,
+      "version": "20261116214701",
+      "target": "20261116214701_chat.sql"
+    },
+    {
+      "original": "20261012000400_helpers.sql",
+      "name": "helpers",
+      "sha256": "cb95798376298e0ea9681ac2356c4ad1e0d4abed72622bd84b83fbaf946ee2fa",
+      "bytes": 10134,
+      "version": "20261116214706",
+      "target": "20261116214706_helpers.sql"
+    },
+    {
+      "original": "20261012000500_rls_crm.sql",
+      "name": "rls_crm",
+      "sha256": "450bf63ccdf2ffe36c9065075918b769de916710936b55112c2fccda96e1fecb",
+      "bytes": 16922,
+      "version": "20261116214710",
+      "target": "20261116214710_rls_crm.sql"
+    },
+    {
+      "original": "20261012000600_rls_chat.sql",
+      "name": "rls_chat",
+      "sha256": "056806b27aae4593d05b51b2f36cc14d059faa0abc0a739efa85b7819a96b3fa",
+      "bytes": 14668,
+      "version": "20261116214716",
+      "target": "20261116214716_rls_chat.sql"
+    },
+    {
+      "original": "20261012000700_rpc.sql",
+      "name": "rpc",
+      "sha256": "f77dd8720eab6c05ea5dff4063d891c4cbad9d31c350edcad5c142d0f56af064",
+      "bytes": 15715,
+      "version": "20261116214721",
+      "target": "20261116214721_rpc.sql"
+    },
+    {
+      "original": "20261012000800_triggers.sql",
+      "name": "triggers",
+      "sha256": "f7de740652bf0702e73d76be0a70e8ef893ab1bca3396c13345b7203194b617c",
+      "bytes": 28495,
+      "applied_sha256": "12da12820c84efd1a4c0555328388f6be216e53d0261077eb10ec6a7fe1fd0ec",
+      "diff": "--- 20261012000800_triggers.sql\n+++ 20261012000800_triggers.sql\n@@ -695,7 +695,8 @@\n begin\n   if exists (select 1 from pg_available_extensions where name = 'pg_cron') then\n     create extension if not exists pg_cron;\n-    perform cron.schedule('purge-expired-messages', '17 3 * * *', 'select public.purge_expired_messages()');\n+    -- Automatic permanent purge disabled for this fork; function retained for explicit use.\n+    null;\n   else\n     raise notice 'pg_cron not available: call public.purge_expired_messages() from a scheduler instead';\n   end if;\n",
+      "version": "20261116214921",
+      "target": "20261116214921_triggers.sql"
+    },
+    {
+      "original": "20261012000900_storage_realtime.sql",
+      "name": "storage_realtime",
+      "sha256": "039e060a524e47afc8d94ecda4376dbd703621638cd8d8070c49d637983d9a72",
+      "bytes": 3094,
+      "applied_sha256": "039e060a524e47afc8d94ecda4376dbd703621638cd8d8070c49d637983d9a72",
+      "diff": "",
+      "version": "20261116214927",
+      "target": "20261116214927_storage_realtime.sql"
+    },
+    {
+      "original": "20261013000100_client_sync.sql",
+      "name": "client_sync",
+      "sha256": "b11a85898884aa4e9b488f57c78750db433b3eae3428a5a7351878e5f7a8d985",
+      "bytes": 17418,
+      "applied_sha256": "b11a85898884aa4e9b488f57c78750db433b3eae3428a5a7351878e5f7a8d985",
+      "diff": "",
+      "version": "20261116215020",
+      "target": "20261116215020_client_sync.sql"
+    },
+    {
+      "original": "20261013000200_chat_pins.sql",
+      "name": "chat_pins",
+      "sha256": "7f0dd52de2979f533c67286663d18fc9b886d96fd55a3c3b67f6e072d0d96651",
+      "bytes": 3744,
+      "applied_sha256": "7f0dd52de2979f533c67286663d18fc9b886d96fd55a3c3b67f6e072d0d96651",
+      "diff": "",
+      "version": "20261116215025",
+      "target": "20261116215025_chat_pins.sql"
+    },
+    {
+      "original": "20261013000300_library.sql",
+      "name": "library",
+      "sha256": "7ed4892da9da219eda3af07bdea9d77b6c5e4706ed89ce9d81ba7bc945a64614",
+      "bytes": 25933,
+      "applied_sha256": "7ed4892da9da219eda3af07bdea9d77b6c5e4706ed89ce9d81ba7bc945a64614",
+      "diff": "",
+      "version": "20261116215041",
+      "target": "20261116215041_library.sql"
+    },
+    {
+      "original": "20261013000400_pipeline.sql",
+      "name": "pipeline",
+      "sha256": "e946c666fd748aaae22307caf6d4c0b8cee4c2fe12993cfd164c92f034b0de63",
+      "bytes": 31350,
+      "applied_sha256": "e946c666fd748aaae22307caf6d4c0b8cee4c2fe12993cfd164c92f034b0de63",
+      "diff": "",
+      "version": "20261116215058",
+      "target": "20261116215058_pipeline.sql"
+    },
+    {
+      "original": "20261013000500_pipeline_undo_registration.sql",
+      "name": "pipeline_undo_registration",
+      "sha256": "9fcf49ea3c85d417c60502e8a2d1d9e88ca6e411fb7a01e63eab8abfeef7be1e",
+      "bytes": 2646,
+      "applied_sha256": "9fcf49ea3c85d417c60502e8a2d1d9e88ca6e411fb7a01e63eab8abfeef7be1e",
+      "diff": "",
+      "version": "20261116215105",
+      "target": "20261116215105_pipeline_undo_registration.sql"
+    },
+    {
+      "original": "20261014000100_growth_path.sql",
+      "name": "growth_path",
+      "sha256": "fb003dfe5e0abac1b63c71f09b269fcebc06dc1cc3ef851d3045ed12afb8f576",
+      "bytes": 11115,
+      "applied_sha256": "fb003dfe5e0abac1b63c71f09b269fcebc06dc1cc3ef851d3045ed12afb8f576",
+      "diff": "",
+      "version": "20261116215749",
+      "target": "20261116215749_growth_path.sql"
+    },
+    {
+      "original": "20261014000500_customer_pipeline.sql",
+      "name": "customer_pipeline",
+      "sha256": "1d569d5949be8515dc99406273baff42bd9c50b3f4707afdea63d340d2102ae3",
+      "bytes": 24791,
+      "applied_sha256": "1d569d5949be8515dc99406273baff42bd9c50b3f4707afdea63d340d2102ae3",
+      "diff": "",
+      "version": "20261116215848",
+      "target": "20261116215848_customer_pipeline.sql"
+    },
+    {
+      "original": "20261014001000_event_types.sql",
+      "name": "event_types",
+      "sha256": "96e20f55001d3c0932c9c53b4b636bca82455104e94f3fb7763f6dcc5b203b20",
+      "bytes": 5341,
+      "applied_sha256": "96e20f55001d3c0932c9c53b4b636bca82455104e94f3fb7763f6dcc5b203b20",
+      "diff": "",
+      "version": "20261116215855",
+      "target": "20261116215855_event_types.sql"
+    },
+    {
+      "original": "20261014001500_unlocks_deputies_admin.sql",
+      "name": "unlocks_deputies_admin",
+      "sha256": "104bc3f72c0fc770b3ac43202a89e8612793ff9ea1a25fb1848de556c6aac910",
+      "bytes": 11981,
+      "applied_sha256": "104bc3f72c0fc770b3ac43202a89e8612793ff9ea1a25fb1848de556c6aac910",
+      "diff": "",
+      "version": "20261116215901",
+      "target": "20261116215901_unlocks_deputies_admin.sql"
+    },
+    {
+      "original": "20261014002000_customer_new_contacts_into_contact.sql",
+      "name": "customer_new_contacts_into_contact",
+      "sha256": "3713171b325d3f6c9cfd247edb2e56a21e8aee0378c30226cb197c9527631936",
+      "bytes": 5865,
+      "applied_sha256": "3713171b325d3f6c9cfd247edb2e56a21e8aee0378c30226cb197c9527631936",
+      "diff": "",
+      "version": "20261116215906",
+      "target": "20261116215906_customer_new_contacts_into_contact.sql"
+    },
+    {
+      "original": "20261014002500_pipeline_fixed_columns.sql",
+      "name": "pipeline_fixed_columns",
+      "sha256": "defc86b72c1c760d64e8ee144a7145e9928adfc7c61d5822171b677324cf38d2",
+      "bytes": 6624,
+      "applied_sha256": "defc86b72c1c760d64e8ee144a7145e9928adfc7c61d5822171b677324cf38d2",
+      "diff": "",
+      "version": "20261116215911",
+      "target": "20261116215911_pipeline_fixed_columns.sql"
+    },
+    {
+      "original": "20261014003000_learning_units.sql",
+      "name": "learning_units",
+      "sha256": "0808c44c954df361cbd79ec8354e94237aeab12e1df546eae5873bdca64d3c00",
+      "bytes": 1033,
+      "applied_sha256": "0808c44c954df361cbd79ec8354e94237aeab12e1df546eae5873bdca64d3c00",
+      "diff": "",
+      "version": "20261116215933",
+      "target": "20261116215933_learning_units.sql"
+    },
+    {
+      "original": "20261014004000_learning_goal_items.sql",
+      "name": "learning_goal_items",
+      "sha256": "81f81b55622e5ef9836b2c74ecfc69d5ee73d7b993a7f464282a123bab402818",
+      "bytes": 2800,
+      "applied_sha256": "81f81b55622e5ef9836b2c74ecfc69d5ee73d7b993a7f464282a123bab402818",
+      "diff": "",
+      "version": "20261116215938",
+      "target": "20261116215938_learning_goal_items.sql"
+    }
+  ]
+}
