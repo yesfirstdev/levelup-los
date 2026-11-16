@@ -1,0 +1,59 @@
+name: Validate migration batch (disposable only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: migration-batch-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  database:
+    if: github.repository == 'yesfirstdev/levelup-los'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Prepare exact sequential control with purges disabled
+        run: python3 scripts/db/prepare-batch-validation.py sequential
+      - name: Start disposable Supabase only
+        run: npx supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector
+      - name: Reset control database
+        run: npm run db:reset
+      - name: Snapshot sequential control
+        run: bash scripts/db/snapshot-batch-validation.sh sequential
+      - name: Prepare first 22 plus single tail migration
+        run: python3 scripts/db/prepare-batch-validation.py batch
+      - name: Reset disposable database using batched history
+        run: npm run db:reset
+      - name: Verify 23 migration records and same schema and configuration
+        run: |
+          count=$(docker exec supabase_db_network-marketing-crm psql -U postgres -d postgres -XAtc 'select count(*) from supabase_migrations.schema_migrations')
+          test "$count" = 23
+          bash scripts/db/snapshot-batch-validation.sh batch
+          diff -u batch-validation-snapshots/sequential-schema.sql batch-validation-snapshots/batch-schema.sql
+          diff -u batch-validation-snapshots/sequential-config.json batch-validation-snapshots/batch-config.json
+      - name: pgTAP tests against batched database
+        run: npm run db:test
+      - name: Integration tests against batched database
+        run: npm run test:integration
+      - name: Upload exact tested SQL and comparisons (no credentials)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-batch-validation
+          path: |
+            batch-validation-tail.sql
+            batch-validation-result.json
+            batch-validation-snapshots/
+      - name: Supabase logs on failure
+        if: failure()
+        run: |
+          docker ps -a --format '{{.Names}}\t{{.Status}}'
+          for c in $(docker ps -a --format '{{.Names}}' | grep -E 'supabase_(db|auth|rest|realtime|storage)'); do
+            echo "::group::$c"; docker logs --tail 80 "$c" 2>&1 || true; echo "::endgroup::"
+          done
