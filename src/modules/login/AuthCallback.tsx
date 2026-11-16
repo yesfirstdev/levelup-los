@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { getSupabase } from "@/lib/supabase";
 import { sessionFromLinkHash } from "@/modules/invites/emailLink";
 import { exchangeCode, takePendingInvite, updatePassword } from "./auth";
+import { needsPasswordSetup } from "./authEntry";
 import { friendlyAuthError } from "./authErrors";
 import { AuthHeading, AuthLayout, AuthLoading, FormError, StatusIcon } from "./AuthLayout";
 
@@ -58,6 +59,7 @@ export function AuthCallback({ search }: { search: CallbackSearch }) {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      const passwordSetup = needsPasswordSetup(search.next, window.location.hash);
       const fromLink = linkError(search);
       if (fromLink) {
         setState({ kind: "error", message: fromLink });
@@ -94,7 +96,7 @@ export function AuthCallback({ search }: { search: CallbackSearch }) {
           return;
         }
       }
-      if (search.next === "reset") {
+      if (passwordSetup) {
         setState({ kind: "reset" });
         return;
       }

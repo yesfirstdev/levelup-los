@@ -9,6 +9,7 @@ import { initTheme } from "./lib/theme";
 import { initAppearance } from "./lib/appearance";
 import { restoreTeamLook } from "./lib/teamLook";
 import { IS_SUPABASE } from "./lib/config";
+import { rootAuthCallback } from "./modules/login/authEntry";
 
 initTheme();
 initAppearance();
@@ -27,15 +28,22 @@ function mount() {
 // render: no flash of the brand's look. With real accounts it is applied right here; the demo keeps its
 // pictures in IndexedDB, so it waits for that one read (a few milliseconds) first. Anything that goes
 // wrong falls back to the brand's look.
-let pending: Promise<void> | void;
-try {
-  pending = restoreTeamLook(
-    IS_SUPABASE
-      ? undefined
-      : (look) => import("./data/teamLook/resolve").then((m) => m.resolveLook(look)),
-  );
-} catch {
-  pending = undefined;
+const authRedirect = IS_SUPABASE
+  ? rootAuthCallback(window.location, import.meta.env.BASE_URL)
+  : null;
+if (authRedirect) {
+  window.location.replace(authRedirect);
+} else {
+  let pending: Promise<void> | void;
+  try {
+    pending = restoreTeamLook(
+      IS_SUPABASE
+        ? undefined
+        : (look) => import("./data/teamLook/resolve").then((m) => m.resolveLook(look)),
+    );
+  } catch {
+    pending = undefined;
+  }
+  if (pending) void pending.then(mount, mount);
+  else mount();
 }
-if (pending) void pending.then(mount, mount);
-else mount();
