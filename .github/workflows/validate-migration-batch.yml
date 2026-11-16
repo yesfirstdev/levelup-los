@@ -1,6 +1,8 @@
 name: Validate migration batch (disposable only)
 on:
   workflow_dispatch:
+  push:
+    branches: [test/validated-migration-tail]
 permissions:
   contents: read
 concurrency:
