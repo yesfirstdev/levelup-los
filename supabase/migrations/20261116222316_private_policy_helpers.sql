@@ -80,4 +80,15 @@ revoke execute on all functions in schema app_private from public, anon;
 grant execute on all functions in schema app_private to authenticated, service_role;
 comment on schema app_private is
   'Internal policy and trigger helpers. Never expose through the Data API or its search path.';
+-- A scoped public date RPC preserves existing recurrence clients. Unlike the
+-- internal lookup, it returns no timezone-derived value for another team.
+create function public.workspace_today(p_workspace_id text)
+returns date language sql stable security invoker set search_path = '' as $function$
+  select case when auth.uid() is not null
+                   and p_workspace_id = public.current_workspace_id()
+              then app_private.workspace_today(p_workspace_id)
+              else null end
+$function$;
+revoke execute on function public.workspace_today(text) from public, anon;
+grant execute on function public.workspace_today(text) to authenticated, service_role;
 notify pgrst, 'reload schema';

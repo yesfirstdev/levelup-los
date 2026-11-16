@@ -41,7 +41,6 @@ const rawLookups: [string, Record<string, string>][] = [
   ["message_conversation_id", { p_message_id: "message1" }],
   ["person_workspace", { p_person_id: PERSON }],
   ["pipeline_move_is_latest", { p_move_id: "move1" }],
-  ["workspace_today", { p_workspace_id: WS }],
   ["step_card_owner", { p_board: "recruiting", p_card_id: PERSON }],
   ["dm_open", { p_conversation_id: "dm-1-2" }],
 ];
@@ -90,6 +89,9 @@ async function assertHidden(client: SupabaseClient) {
 describe("internal helper API isolation", () => {
   it("anonymous API callers cannot query any raw helper or private schema", async () => {
     await assertHidden(anon);
+    const date = await anon.rpc("workspace_today", { p_workspace_id: WS });
+    expect(date.error).not.toBeNull();
+    expect(date.data).toBeNull();
     const result = await anon.rpc("pair_includes_caller", { a: "1", b: "2" });
     expect(result.error).not.toBeNull();
     expect(result.data).toBeNull();
@@ -99,6 +101,12 @@ describe("internal helper API isolation", () => {
     expect(result.error).toBeNull();
     expect(result.data).toEqual([]);
     await assertHidden(member);
+    const otherDate = await member.rpc("workspace_today", { p_workspace_id: WS });
+    expect(otherDate.error).toBeNull();
+    expect(otherDate.data).toBeNull();
+    const ownDate = await member.rpc("workspace_today", { p_workspace_id: "w1" });
+    expect(ownDate.error).toBeNull();
+    expect(ownDate.data).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
   it("legitimate sign-in, scoped directory and sponsor-chain RPC still work", async () => {
     const session = await member.rpc("get_session");
