@@ -63,6 +63,11 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+        # Unit fixtures must never use the hosted database.
+        env:
+          VITE_DATA_SOURCE: local
+          VITE_SUPABASE_URL: ''
+          VITE_SUPABASE_ANON_KEY: ''
       - run: npm run build
       # Pages has no SPA rewrite support. Preserve the existing fallback for
       # direct links, including /levelup-los/auth/callback, and disable Jekyll.
