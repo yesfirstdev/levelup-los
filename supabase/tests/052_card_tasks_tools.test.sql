@@ -94,12 +94,12 @@ insert into public.workspaces (id, name, timezone) values
    case when extract(hour from now() at time zone 'UTC') >= 10 then 'Pacific/Kiritimati' else 'Pacific/Pago_Pago' end),
   ('cty', 'Other Team', 'America/Chicago');
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_id, business_start_date, phone, email, ibo_number, ltd_number) values
-  ('ctl',  'ctw', 'Lena Leader',     'ibo',        null,   null, public.workspace_today('ctw') - 900, '555-0001', 'lena@card.test',  'IBO-SECRET-L', 'LTD-SECRET-L'),
-  ('cta',  'ctw', 'Alex Apprentice', 'apprentice', 'ctl',  null, public.workspace_today('ctw') - 100, '555-0002', 'alex@card.test',  'IBO-SECRET-A', 'LTD-SECRET-A'),
-  ('ctn',  'ctw', 'Ann Apprentice',  'apprentice', 'ctl',  null, public.workspace_today('ctw') - 50,  '555-0003', null,              'IBO-SECRET-N', null),
-  ('ctb',  'ctw', 'Bea Ibo',         'ibo',        'cta',  null, public.workspace_today('ctw') - 700, '555-0004', 'bea@card.test',   'IBO-SECRET-B', 'LTD-SECRET-B'),
-  ('ctx',  'ctw', 'Xavier Outsider', 'ibo',        null,   null, public.workspace_today('ctw') - 800, '555-0005', null,              'IBO-SECRET-X', null),
-  ('ctd',  'ctw', 'Dee Deputy',      'apprentice', 'ctl',  null, public.workspace_today('ctw') - 80,  null,       null,              null, null),
+  ('ctl',  'ctw', 'Lena Leader',     'ibo',        null,   null, app_private.workspace_today('ctw') - 900, '555-0001', 'lena@card.test',  'IBO-SECRET-L', 'LTD-SECRET-L'),
+  ('cta',  'ctw', 'Alex Apprentice', 'apprentice', 'ctl',  null, app_private.workspace_today('ctw') - 100, '555-0002', 'alex@card.test',  'IBO-SECRET-A', 'LTD-SECRET-A'),
+  ('ctn',  'ctw', 'Ann Apprentice',  'apprentice', 'ctl',  null, app_private.workspace_today('ctw') - 50,  '555-0003', null,              'IBO-SECRET-N', null),
+  ('ctb',  'ctw', 'Bea Ibo',         'ibo',        'cta',  null, app_private.workspace_today('ctw') - 700, '555-0004', 'bea@card.test',   'IBO-SECRET-B', 'LTD-SECRET-B'),
+  ('ctx',  'ctw', 'Xavier Outsider', 'ibo',        null,   null, app_private.workspace_today('ctw') - 800, '555-0005', null,              'IBO-SECRET-X', null),
+  ('ctd',  'ctw', 'Dee Deputy',      'apprentice', 'ctl',  null, app_private.workspace_today('ctw') - 80,  null,       null,              null, null),
   ('ctc',  'ctw', 'Cal Candidate',   'prospect',   'ctl',  null, null,               null,       null,              null, null),
   ('ctpl', 'ctw', 'Pat Lenas',       'prospect',   'ctl',  null, null,               '555-0101', 'pat@card.test',   null, null),
   ('ctpa', 'ctw', 'Pia Alexs',       'prospect',   'cta',  null, null,               '555-0102', null,              null, null),
@@ -109,7 +109,7 @@ insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_
   ('ctpx', 'ctw', 'Pax Xavs',        'prospect',   'ctx',  null, null,               null,       null,              null, null),
   ('ctpo', 'ctw', 'Orla Cals',       'prospect',   'ctc',  null, null,               null,       null,              null, null),
   ('ctca', 'ctw', 'Cara Customer',   'customer',   null,   'cta', null,              '555-0201', null,              null, null),
-  ('ctz',  'cty', 'Zed Elsewhere',   'ibo',        null,   null, public.workspace_today('ctw') - 500, null,       null,              'IBO-SECRET-Z', null);
+  ('ctz',  'cty', 'Zed Elsewhere',   'ibo',        null,   null, app_private.workspace_today('ctw') - 500, null,       null,              'IBO-SECRET-Z', null);
 insert into auth.users (instance_id, id, aud, role, email)
 select '00000000-0000-0000-0000-000000000000', pg_temp.login(n), 'authenticated', 'authenticated', 'card-test-' || n || '@card.test'
   from generate_series(1, 8) n;
@@ -129,12 +129,12 @@ insert into public.list_entries (id, workspace_id, owner_id, name, customer_id) 
   ('cte_x', 'ctw', 'ctx', 'Entry Xray', null);
 -- The stored cards, each with a booked next step, a note and a column of its own: none of it may ever change here.
 insert into public.pipeline_cards (person_id, workspace_id, column_id, entered_at, next_column, next_step_date, next_step_time, note) values
-  ('ctpa', 'ctw', 'first_meeting', now() - interval '10 days', 'first_plan', public.workspace_today('ctw') + 3, time '10:30', 'card note A'),
-  ('ctpb', 'ctw', 'contact', now() - interval '3 days', 'first_meeting', public.workspace_today('ctw') + 1, null, null),
+  ('ctpa', 'ctw', 'first_meeting', now() - interval '10 days', 'first_plan', app_private.workspace_today('ctw') + 3, time '10:30', 'card note A'),
+  ('ctpb', 'ctw', 'contact', now() - interval '3 days', 'first_meeting', app_private.workspace_today('ctw') + 1, null, null),
   ('ctpx', 'ctw', 'first_plan', now() - interval '20 days', null, null, null, 'card note X');
 insert into public.customer_cards (entry_id, workspace_id, column_id, entered_at, next_column, next_step_date, next_step_time, note) values
-  ('cte_a', 'ctw', 'contact', now() - interval '5 days', 'first_meeting', public.workspace_today('ctw') + 2, time '14:00', 'entry note A'),
-  ('cte_b', 'ctw', 'first_meeting', now() - interval '8 days', 'first_sale', public.workspace_today('ctw') + 5, null, null);
+  ('cte_a', 'ctw', 'contact', now() - interval '5 days', 'first_meeting', app_private.workspace_today('ctw') + 2, time '14:00', 'entry note A'),
+  ('cte_b', 'ctw', 'first_meeting', now() - interval '8 days', 'first_sale', app_private.workspace_today('ctw') + 5, null, null);
 
 create function pg_temp.conn(p_n int) returns uuid language sql immutable as $$
   select ('00000000-0000-4000-8000-00000000d0' || lpad(p_n::text, 2, '0'))::uuid $$;
@@ -179,7 +179,7 @@ create function pg_temp.task_row(p_id text) returns text language sql as $$
 
 -- More fixture: a prospect with no tasks, and tasks that are due at known moments of the TEAM's clock.
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id) values ('ctpa3', 'ctw', 'Rae Alexs', 'prospect', 'cta');
-create temp table tnow as select (now() at time zone w.timezone) as local_now, w.timezone as tz, public.workspace_today('ctw') as today
+create temp table tnow as select (now() at time zone w.timezone) as local_now, w.timezone as tz, app_private.workspace_today('ctw') as today
   from public.workspaces w where w.id = 'ctw';
 grant select on tnow to public;
 insert into public.card_tasks (id, workspace_id, person_id, entry_id, title, done, done_at, done_by, due_date, due_time, assignee_id, position, created_by, created_at, updated_at)

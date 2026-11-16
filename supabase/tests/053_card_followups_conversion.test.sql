@@ -14,8 +14,8 @@ select plan(54);
 insert into public.workspaces (id, name, timezone) values
   ('cvw', 'Conversion Team', case when extract(hour from now() at time zone 'UTC') >= 10 then 'Pacific/Kiritimati' else 'Pacific/Pago_Pago' end);
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, business_start_date) values
-  ('cvl', 'cvw', 'Lena Leader',     'ibo',        null,  public.workspace_today('cvw') - 900),
-  ('cva', 'cvw', 'Alex Apprentice', 'apprentice', 'cvl', public.workspace_today('cvw') - 100),
+  ('cvl', 'cvw', 'Lena Leader',     'ibo',        null,  app_private.workspace_today('cvw') - 900),
+  ('cva', 'cvw', 'Alex Apprentice', 'apprentice', 'cvl', app_private.workspace_today('cvw') - 100),
   ('cvp1', 'cvw', 'P One',   'prospect', 'cva', null),
   ('cvp2', 'cvw', 'P Two',   'prospect', 'cva', null),
   ('cvp3', 'cvw', 'P Three', 'prospect', 'cva', null),
@@ -43,27 +43,27 @@ insert into public.customer_steps (id, workspace_id, owner_id, band, label, posi
 -- The stored bookings and notes (the way the old app left them).
 -- (updated_at is set to a day of its own, so the notes' created_at can be told from now())
 insert into public.pipeline_cards (person_id, workspace_id, column_id, entered_at, next_column, next_step_date, next_step_time, note, updated_at) values
-  ('cvp1', 'cvw', 'contact', now() - interval '9 days', 'first_meeting', public.workspace_today('cvw') + 2, time '09:15', null, now() - interval '3 days'),
-  ('cvp2', 'cvw', 'contact', now() - interval '8 days', 'cvst1',         public.workspace_today('cvw') + 3, null,         '  Met at the gym  ', now() - interval '3 days'),
-  ('cvp3', 'cvw', 'contact', now() - interval '7 days', 'cvst2',         public.workspace_today('cvw') - 1, time '18:00', null, now() - interval '3 days'),
-  ('cvp4', 'cvw', 'contact', now() - interval '6 days', 'cvst3',         public.workspace_today('cvw') + 4, null,         null, now() - interval '3 days'),
+  ('cvp1', 'cvw', 'contact', now() - interval '9 days', 'first_meeting', app_private.workspace_today('cvw') + 2, time '09:15', null, now() - interval '3 days'),
+  ('cvp2', 'cvw', 'contact', now() - interval '8 days', 'cvst1',         app_private.workspace_today('cvw') + 3, null,         '  Met at the gym  ', now() - interval '3 days'),
+  ('cvp3', 'cvw', 'contact', now() - interval '7 days', 'cvst2',         app_private.workspace_today('cvw') - 1, time '18:00', null, now() - interval '3 days'),
+  ('cvp4', 'cvw', 'contact', now() - interval '6 days', 'cvst3',         app_private.workspace_today('cvw') + 4, null,         null, now() - interval '3 days'),
   ('cvp5', 'cvw', 'contact', now() - interval '5 days', 'first_plan',    null,                              null,         null, now() - interval '3 days'),
   ('cvp6', 'cvw', 'contact', now() - interval '4 days', null,            null,                              null,         '   ', now() - interval '3 days'),
   ('cvp7', 'cvw', 'contact', now() - interval '3 days', null,            null,                              null,         'Likes coffee', now() - interval '3 days'),
-  ('cvp8', 'cvw', 'contact', now() - interval '2 days', 'first_meeting', public.workspace_today('cvw') + 6, time '07:30', 'Already a note', now() - interval '3 days'),
-  ('cvpn', 'cvw', 'contact', now() - interval '1 days', 'first_meeting', public.workspace_today('cvw') + 7, null,         'Nobody''s note', now() - interval '3 days');
+  ('cvp8', 'cvw', 'contact', now() - interval '2 days', 'first_meeting', app_private.workspace_today('cvw') + 6, time '07:30', 'Already a note', now() - interval '3 days'),
+  ('cvpn', 'cvw', 'contact', now() - interval '1 days', 'first_meeting', app_private.workspace_today('cvw') + 7, null,         'Nobody''s note', now() - interval '3 days');
 insert into public.customer_cards (entry_id, workspace_id, column_id, entered_at, next_column, next_step_date, next_step_time, note, updated_at) values
-  ('cve1', 'cvw', 'contact',       now() - interval '5 days', 'first_meeting', public.workspace_today('cvw') + 2, time '14:00', 'Wants the sampler', now() - interval '4 days'),
-  ('cve2', 'cvw', 'contact',       now() - interval '5 days', 'cvcs1',         public.workspace_today('cvw') + 1, null,         null, now() - interval '4 days'),
+  ('cve1', 'cvw', 'contact',       now() - interval '5 days', 'first_meeting', app_private.workspace_today('cvw') + 2, time '14:00', 'Wants the sampler', now() - interval '4 days'),
+  ('cve2', 'cvw', 'contact',       now() - interval '5 days', 'cvcs1',         app_private.workspace_today('cvw') + 1, null,         null, now() - interval '4 days'),
   ('cve3', 'cvw', 'not_contacted', now() - interval '5 days', null,            null,                              null,         null, now() - interval '4 days'),
   ('cve4', 'cvw', 'contact',       now() - interval '5 days', 'on_ditto',      null,                              null,         null, now() - interval '4 days');
 -- A cancelled step, which stays exactly as it is.
 insert into public.pipeline_step_cancellations (id, workspace_id, board, card_id, owner_id, column_id, booked_date, reason, cancelled_by)
-  values ('cvx1', 'cvw', 'recruiting', 'cvp3', 'cva', 'cvst2', public.workspace_today('cvw') - 1, 'no_show', 'cva');
+  values ('cvx1', 'cvw', 'recruiting', 'cvp3', 'cva', 'cvst2', app_private.workspace_today('cvw') - 1, 'no_show', 'cva');
 -- One step stops existing (the booked column of cvp3 is gone); one task and one note already exist.
 delete from public.pipeline_steps where id = 'cvst2';
 insert into public.card_tasks (id, workspace_id, person_id, title, due_date, due_time, assignee_id, position)
-  values ('cvt-old', 'cvw', 'cvp8', 'First meeting (MG1)', public.workspace_today('cvw') + 6, time '07:30', 'cva', 0);
+  values ('cvt-old', 'cvw', 'cvp8', 'First meeting (MG1)', app_private.workspace_today('cvw') + 6, time '07:30', 'cva', 0);
 insert into public.card_notes (id, workspace_id, person_id, author_id, body)
   values ('cvn-old', 'cvw', 'cvp8', 'cvl', 'Already a note');
 
@@ -103,12 +103,12 @@ select is((select count(*) from public.card_notes where workspace_id = 'cvw'),
 -- Recruiting mapping -----------------------------------------------------------
 select is((select title || ' | ' || due_date::text || ' | ' || due_time::text || ' | ' || assignee_id || ' | ' || done::text
              from public.card_tasks where person_id = 'cvp1'),
-  'First meeting (MG1) | ' || (public.workspace_today('cvw') + 2)::text || ' | 09:15:00 | cva | false',
+  'First meeting (MG1) | ' || (app_private.workspace_today('cvw') + 2)::text || ' | 09:15:00 | cva | false',
   'a booked milestone: its name on the board, the day, the time, the owner as assignee, not done');
 select is((select title || ' | ' || due_date::text || ' | ' || coalesce(due_time::text, '-') from public.card_tasks where person_id = 'cvp2'),
-  'Coffee chat | ' || (public.workspace_today('cvw') + 3)::text || ' | -', 'a booked leader step: the step''s name, no time');
+  'Coffee chat | ' || (app_private.workspace_today('cvw') + 3)::text || ' | -', 'a booked leader step: the step''s name, no time');
 select is((select title || ' | ' || due_date::text || ' | ' || due_time::text from public.card_tasks where person_id = 'cvp3'),
-  'Next step | ' || (public.workspace_today('cvw') - 1)::text || ' | 18:00:00',
+  'Next step | ' || (app_private.workspace_today('cvw') - 1)::text || ' | 18:00:00',
   'a booked column that no longer exists: Next step, with its (overdue) day and time');
 select is((select title from public.card_tasks where person_id = 'cvp4'), 'Hidden step',
   'a step hidden for the owner is still named by its step');
@@ -130,10 +130,10 @@ select is((select position from public.card_tasks where person_id = 'cvp1'), 0, 
 -- Customer mapping -----------------------------------------------------------
 select is((select title || ' | ' || due_date::text || ' | ' || due_time::text || ' | ' || assignee_id
              from public.card_tasks where entry_id = 'cve1'),
-  'First meeting | ' || (public.workspace_today('cvw') + 2)::text || ' | 14:00:00 | cva',
+  'First meeting | ' || (app_private.workspace_today('cvw') + 2)::text || ' | 14:00:00 | cva',
   'customer board: the column''s name there, the day, the time, the list owner as assignee');
 select is((select title || ' | ' || due_date::text || ' | ' || coalesce(due_time::text, '-') from public.card_tasks where entry_id = 'cve2'),
-  'Sampler | ' || (public.workspace_today('cvw') + 1)::text || ' | -', 'customer board: a leader step');
+  'Sampler | ' || (app_private.workspace_today('cvw') + 1)::text || ' | -', 'customer board: a leader step');
 select is((select count(*) from public.card_tasks where entry_id = 'cve3'), 0::bigint, 'customer board: no booking, no task');
 select is((select title || ' | ' || coalesce(due_date::text, '-') from public.card_tasks where entry_id = 'cve4'), 'On Ditto | -',
   'customer board: a booking without a day');
@@ -194,9 +194,9 @@ select is(has_function_privilege('anon', 'public.convert_card_followups()', 'exe
 -- The app no longer passes a booking to the move functions. A stored one is kept when the card moves to a column
 -- before the booked one (or when the booked column is gone), and cleared when it moves to the booked column or
 -- past it; the app never reads it either way.
-update public.pipeline_cards set next_column = 'first_plan', next_step_date = public.workspace_today('cvw') + 2,
+update public.pipeline_cards set next_column = 'first_plan', next_step_date = app_private.workspace_today('cvw') + 2,
   next_step_time = time '10:00' where person_id = 'cvp1';
-update public.pipeline_cards set next_column = 'first_plan', next_step_date = public.workspace_today('cvw') + 2
+update public.pipeline_cards set next_column = 'first_plan', next_step_date = app_private.workspace_today('cvw') + 2
   where person_id = 'cvp2';
 select set_config('role', 'postgres', true);
 select set_config('request.jwt.claims', '', true);

@@ -1,7 +1,7 @@
 -- AI agents are on by default (migration 20261110000100_agents_on_by_default): a team with no
 -- `agents` row in feature_switches has the feature on; an explicit row decides. Self-contained:
 -- builds its own teams (dfw: no row, dfx: an explicit false row), all rolled back. Dates come from
--- public.workspace_today(<team>), never current_date.
+-- app_private.workspace_today(<team>), never current_date.
 begin;
 create extension if not exists pgtap with schema extensions;
 select plan(43);
@@ -57,12 +57,12 @@ end $$;
 -- Team dfx (an explicit false row): its leader Xena (login 6).
 insert into public.workspaces (id, name) values ('dfw', 'Default Test Team'), ('dfx', 'Switched Off Team');
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, business_start_date, pipeline_stage) values
-  ('dfl', 'dfw', 'Lena Leader', 'ibo', null, public.workspace_today('dfw') - 900, 'ibo'),
-  ('dfa', 'dfw', 'Alex Apprentice', 'apprentice', 'dfl', public.workspace_today('dfw') - 100, 'apprentice'),
-  ('dfb', 'dfw', 'Bea Ibo', 'ibo', 'dfl', public.workspace_today('dfw') - 700, 'ibo'),
+  ('dfl', 'dfw', 'Lena Leader', 'ibo', null, app_private.workspace_today('dfw') - 900, 'ibo'),
+  ('dfa', 'dfw', 'Alex Apprentice', 'apprentice', 'dfl', app_private.workspace_today('dfw') - 100, 'apprentice'),
+  ('dfb', 'dfw', 'Bea Ibo', 'ibo', 'dfl', app_private.workspace_today('dfw') - 700, 'ibo'),
   ('dfd', 'dfw', 'Dana Candidate', 'prospect', 'dfl', null, 'prospect'),
   ('dfp', 'dfw', 'Pat Prospect', 'prospect', 'dfa', null, 'prospect'),
-  ('dxl', 'dfx', 'Xena Leader', 'ibo', null, public.workspace_today('dfx') - 900, 'ibo');
+  ('dxl', 'dfx', 'Xena Leader', 'ibo', null, app_private.workspace_today('dfx') - 900, 'ibo');
 insert into auth.users (instance_id, id, aud, role, email)
 select '00000000-0000-0000-0000-000000000000', ('00000000-0000-4000-8000-0000000b900' || n)::uuid,
        'authenticated', 'authenticated', 'default-test-' || n || '@agent.test'

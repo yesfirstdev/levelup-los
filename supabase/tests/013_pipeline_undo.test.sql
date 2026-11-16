@@ -109,7 +109,7 @@ select lives_ok($$select public.move_pipeline_card('20', 'registered', 'mv-undo-
 select is(pg_temp.affected($$delete from public.pipeline_moves where id = 'mv-undo-beau'$$), 1,
   'and undoes it');
 select pg_temp.logout();
-select is(pg_temp.stage('20') || ' ' || public.chat_eligible('20')::text, 'prospect/prospect false',
+select is(pg_temp.stage('20') || ' ' || app_private.chat_eligible('20')::text, 'prospect/prospect false',
   'Beau is a prospect again (a candidate: no chat)');
 -- Beau is on the Monthly Team Meeting and two info sessions (src/data/seed.ts).
 select is(pg_temp.beau_rows(), '3/2/1/2/1',

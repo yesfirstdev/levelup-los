@@ -67,20 +67,20 @@ end $$;
 -- The ids of the columns of an owner's board from one band on, in board order ('registered,s-a,s-b,referral_source,...').
 create function pg_temp.board(p_owner text, p_from_band text default 'registered') returns text language sql as $$
   select string_agg(c.id, ',' order by c.ord)
-    from public.board_columns('recruiting', p_owner) c
-   where c.ord >= (select min(x.ord) from public.board_columns('recruiting', p_owner) x where x.band = p_from_band)
+    from app_private.board_columns('recruiting', p_owner) c
+   where c.ord >= (select min(x.ord) from app_private.board_columns('recruiting', p_owner) x where x.band = p_from_band)
 $$;
 
 insert into public.workspaces (id, name, timezone) values
   ('prw', 'Post Registration Team',
    case when extract(hour from now() at time zone 'UTC') >= 10 then 'Pacific/Kiritimati' else 'Pacific/Pago_Pago' end);
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_id, business_start_date) values
-  ('prl',  'prw', 'Pat Leader',     'ibo',        null,  null, public.workspace_today('prw') - 900),
-  ('pra',  'prw', 'Alex Mid',       'ibo',        'prl', null, public.workspace_today('prw') - 700),
-  ('prb',  'prw', 'Bo Registered',  'apprentice', 'pra', null, public.workspace_today('prw')),
-  ('prd',  'prw', 'Dee Deputy',     'apprentice', 'prl', null, public.workspace_today('prw') - 80),
-  ('prx',  'prw', 'Xavier Outside', 'ibo',        null,  null, public.workspace_today('prw') - 800),
-  ('prxr', 'prw', 'Xena Outside',   'apprentice', 'prx', null, public.workspace_today('prw') - 20),
+  ('prl',  'prw', 'Pat Leader',     'ibo',        null,  null, app_private.workspace_today('prw') - 900),
+  ('pra',  'prw', 'Alex Mid',       'ibo',        'prl', null, app_private.workspace_today('prw') - 700),
+  ('prb',  'prw', 'Bo Registered',  'apprentice', 'pra', null, app_private.workspace_today('prw')),
+  ('prd',  'prw', 'Dee Deputy',     'apprentice', 'prl', null, app_private.workspace_today('prw') - 80),
+  ('prx',  'prw', 'Xavier Outside', 'ibo',        null,  null, app_private.workspace_today('prw') - 800),
+  ('prxr', 'prw', 'Xena Outside',   'apprentice', 'prx', null, app_private.workspace_today('prw') - 20),
   ('prc',  'prw', 'Cal Candidate',  'prospect',   'prl', null, null),
   ('prcu', 'prw', 'Cara Customer',  'customer',   null,  'pra', null);
 insert into auth.users (instance_id, id, aud, role, email)
@@ -150,7 +150,7 @@ select is(pg_temp.board('prb'), 'registered,s-act,s-90,s-call,s-act2,referral_so
   'and so does everyone under Alex');
 select is(pg_temp.board('prx'), 'registered,s-xav,referral_source,not_interested,do_not_contact',
   'another line sees only its own');
-select is(pg_temp.q($$select string_agg(c.id, ',' order by c.ord) from public.board_columns('recruiting', 'pra') c where c.band = 'first_plan'$$),
+select is(pg_temp.q($$select string_agg(c.id, ',' order by c.ord) from app_private.board_columns('recruiting', 'pra') c where c.band = 'first_plan'$$),
   'first_plan,s-info', 'steps before Registered keep their place, before Registered');
 
 -- Reorder: the owner changes his positions ---------------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ select is((select count(*)::int from public.pipeline_step_hides where step_id = 
 select is(pg_temp.try_as(2, $$insert into public.customer_steps (id, band, label, position) values ('cs-x', 'registered', 'After', 0)$$), '23514',
   'a customer step cannot take the band after Registered');
 select pg_temp.as_postgres();
-select is((select count(*)::int from public.board_columns('customer', 'pra') where band = 'registered'), 0,
+select is((select count(*)::int from app_private.board_columns('customer', 'pra') where band = 'registered'), 0,
   'and the customer board has no such band');
 
 select * from finish();

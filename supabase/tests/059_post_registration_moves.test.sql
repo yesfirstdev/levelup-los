@@ -74,12 +74,12 @@ insert into public.workspaces (id, name, timezone) values
   ('prw', 'Post Registration Team',
    case when extract(hour from now() at time zone 'UTC') >= 10 then 'Pacific/Kiritimati' else 'Pacific/Pago_Pago' end);
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_id, business_start_date) values
-  ('prl',  'prw', 'Pat Leader',     'ibo',        null,  null, public.workspace_today('prw') - 900),
-  ('pra',  'prw', 'Alex Mid',       'ibo',        'prl', null, public.workspace_today('prw') - 700),
-  ('prb',  'prw', 'Bo Registered',  'apprentice', 'pra', null, public.workspace_today('prw') - 9),
-  ('pre',  'prw', 'Eve Registered', 'apprentice', 'pra', null, public.workspace_today('prw') - 200),
-  ('prd',  'prw', 'Dee Deputy',     'apprentice', 'prl', null, public.workspace_today('prw') - 80),
-  ('prx',  'prw', 'Xavier Outside', 'ibo',        null,  null, public.workspace_today('prw') - 800),
+  ('prl',  'prw', 'Pat Leader',     'ibo',        null,  null, app_private.workspace_today('prw') - 900),
+  ('pra',  'prw', 'Alex Mid',       'ibo',        'prl', null, app_private.workspace_today('prw') - 700),
+  ('prb',  'prw', 'Bo Registered',  'apprentice', 'pra', null, app_private.workspace_today('prw') - 9),
+  ('pre',  'prw', 'Eve Registered', 'apprentice', 'pra', null, app_private.workspace_today('prw') - 200),
+  ('prd',  'prw', 'Dee Deputy',     'apprentice', 'prl', null, app_private.workspace_today('prw') - 80),
+  ('prx',  'prw', 'Xavier Outside', 'ibo',        null,  null, app_private.workspace_today('prw') - 800),
   ('prc',  'prw', 'Cal Candidate',  'prospect',   'prl', null, null),
   ('prp1', 'prw', 'Pia Prospect',   'prospect',   'pra', null, null),
   ('prp2', 'prw', 'Quinn Prospect', 'prospect',   'pra', null, null),
@@ -156,7 +156,7 @@ select is(pg_temp.try_as(2, $$select public.move_pipeline_card('prp2', 's-call')
 select is(pg_temp.run_as(2, $$select public.move_pipeline_card('prp1', 'registered', 'mv-p1')$$), 'rows=1', 'a prospect still registers by moving into Registered');
 select pg_temp.as_postgres();
 select is(split_part(pg_temp.stage('prp1'), '/', 1) || '/' || split_part(pg_temp.stage('prp1'), '/', 2), 'apprentice/apprentice', 'they are an apprentice');
-select is(split_part(pg_temp.stage('prp1'), '/', 3)::date, public.workspace_today('prw'), 'from today (the team''s day)');
+select is(split_part(pg_temp.stage('prp1'), '/', 3)::date, app_private.workspace_today('prw'), 'from today (the team''s day)');
 select is(pg_temp.acts('prp1', 'Pipeline → apprentice'), 1, 'and the registration is logged once');
 create temp table pia_registered as select pg_temp.stage('prp1') as v;
 grant select on pia_registered to public;
