@@ -49,13 +49,13 @@ create function pg_temp.booked(p_person text) returns text language sql as $$
     from public.pipeline_cards where person_id = p_person
 $$;
 -- Fixture: the bookings this file works on, dated from the workspace calendar, not UTC.
-update public.pipeline_cards set next_column = 's-f1', next_step_date = public.workspace_today('w1') + 2,
+update public.pipeline_cards set next_column = 's-f1', next_step_date = app_private.workspace_today('w1') + 2,
   next_step_time = null, note = 'Bring to Fall Weekend' where person_id = '9';
-update public.pipeline_cards set next_column = 'first_meeting', next_step_date = public.workspace_today('w1'),
+update public.pipeline_cards set next_column = 'first_meeting', next_step_date = app_private.workspace_today('w1'),
   next_step_time = '18:30' where person_id = '204';
-update public.pipeline_cards set next_column = 's-mg2', next_step_date = public.workspace_today('w1') + 3,
+update public.pipeline_cards set next_column = 's-mg2', next_step_date = app_private.workspace_today('w1') + 3,
   next_step_time = null where person_id = '200';
-update public.customer_cards set next_column = 'first_meeting', next_step_date = public.workspace_today('w1'),
+update public.customer_cards set next_column = 'first_meeting', next_step_date = app_private.workspace_today('w1'),
   next_step_time = null where entry_id = 'le-4-6';
 create temp table seeded as
   select person_id as id, pg_temp.booked(person_id) as booked from public.pipeline_cards

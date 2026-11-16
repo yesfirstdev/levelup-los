@@ -45,7 +45,7 @@ insert into public.messages (conversation_id, body) values (public.create_dm('4'
 select pg_temp.logout();
 select is(pg_temp.pair_contacts('4', '7'), 2, 'messages both ways within 24 hours log exactly two contacts');
 select is((select count(*)::int from public.contacts
-           where source = 'message' and person_id = '7' and by_id = '4' and date = public.workspace_today('w1')), 1,
+           where source = 'message' and person_id = '7' and by_id = '4' and date = app_private.workspace_today('w1')), 1,
   'a contact for Sarah by Jamal, dated today in the team''s time zone');
 select is((select count(*)::int from public.contacts where source = 'message' and person_id = '4' and by_id = '7'), 1,
   'and one for Jamal by Sarah');

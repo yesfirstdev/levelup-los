@@ -26,11 +26,11 @@ begin
 end $$;
 
 -- Eligibility ------------------------------------------------------------------
-select ok(public.chat_eligible('1'), 'the leader chats');
-select ok(public.chat_eligible('2'), 'an IBO chats');
-select ok(public.chat_eligible('4'), 'an apprentice chats');
-select ok(not public.chat_eligible('20'), 'a candidate (prospect with an account) does not chat');
-select ok(not public.chat_eligible('c1'), 'customers do not chat');
+select ok(app_private.chat_eligible('1'), 'the leader chats');
+select ok(app_private.chat_eligible('2'), 'an IBO chats');
+select ok(app_private.chat_eligible('4'), 'an apprentice chats');
+select ok(not app_private.chat_eligible('20'), 'a candidate (prospect with an account) does not chat');
+select ok(not app_private.chat_eligible('c1'), 'customers do not chat');
 select is(public.effective_biz_class('apprentice', current_date - 400), 'ibo',
   'an apprentice past one year counts as an IBO (effectiveBizClass)');
 select is(public.effective_biz_class('apprentice', current_date - 100), 'apprentice',

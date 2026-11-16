@@ -94,12 +94,12 @@ insert into public.workspaces (id, name, timezone) values
    case when extract(hour from now() at time zone 'UTC') >= 10 then 'Pacific/Kiritimati' else 'Pacific/Pago_Pago' end),
   ('cty', 'Other Team', 'America/Chicago');
 insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_id, business_start_date, phone, email, ibo_number, ltd_number) values
-  ('ctl',  'ctw', 'Lena Leader',     'ibo',        null,   null, public.workspace_today('ctw') - 900, '555-0001', 'lena@card.test',  'IBO-SECRET-L', 'LTD-SECRET-L'),
-  ('cta',  'ctw', 'Alex Apprentice', 'apprentice', 'ctl',  null, public.workspace_today('ctw') - 100, '555-0002', 'alex@card.test',  'IBO-SECRET-A', 'LTD-SECRET-A'),
-  ('ctn',  'ctw', 'Ann Apprentice',  'apprentice', 'ctl',  null, public.workspace_today('ctw') - 50,  '555-0003', null,              'IBO-SECRET-N', null),
-  ('ctb',  'ctw', 'Bea Ibo',         'ibo',        'cta',  null, public.workspace_today('ctw') - 700, '555-0004', 'bea@card.test',   'IBO-SECRET-B', 'LTD-SECRET-B'),
-  ('ctx',  'ctw', 'Xavier Outsider', 'ibo',        null,   null, public.workspace_today('ctw') - 800, '555-0005', null,              'IBO-SECRET-X', null),
-  ('ctd',  'ctw', 'Dee Deputy',      'apprentice', 'ctl',  null, public.workspace_today('ctw') - 80,  null,       null,              null, null),
+  ('ctl',  'ctw', 'Lena Leader',     'ibo',        null,   null, app_private.workspace_today('ctw') - 900, '555-0001', 'lena@card.test',  'IBO-SECRET-L', 'LTD-SECRET-L'),
+  ('cta',  'ctw', 'Alex Apprentice', 'apprentice', 'ctl',  null, app_private.workspace_today('ctw') - 100, '555-0002', 'alex@card.test',  'IBO-SECRET-A', 'LTD-SECRET-A'),
+  ('ctn',  'ctw', 'Ann Apprentice',  'apprentice', 'ctl',  null, app_private.workspace_today('ctw') - 50,  '555-0003', null,              'IBO-SECRET-N', null),
+  ('ctb',  'ctw', 'Bea Ibo',         'ibo',        'cta',  null, app_private.workspace_today('ctw') - 700, '555-0004', 'bea@card.test',   'IBO-SECRET-B', 'LTD-SECRET-B'),
+  ('ctx',  'ctw', 'Xavier Outsider', 'ibo',        null,   null, app_private.workspace_today('ctw') - 800, '555-0005', null,              'IBO-SECRET-X', null),
+  ('ctd',  'ctw', 'Dee Deputy',      'apprentice', 'ctl',  null, app_private.workspace_today('ctw') - 80,  null,       null,              null, null),
   ('ctc',  'ctw', 'Cal Candidate',   'prospect',   'ctl',  null, null,               null,       null,              null, null),
   ('ctpl', 'ctw', 'Pat Lenas',       'prospect',   'ctl',  null, null,               '555-0101', 'pat@card.test',   null, null),
   ('ctpa', 'ctw', 'Pia Alexs',       'prospect',   'cta',  null, null,               '555-0102', null,              null, null),
@@ -109,7 +109,7 @@ insert into public.people (id, workspace_id, name, biz_class, sponsor_id, owner_
   ('ctpx', 'ctw', 'Pax Xavs',        'prospect',   'ctx',  null, null,               null,       null,              null, null),
   ('ctpo', 'ctw', 'Orla Cals',       'prospect',   'ctc',  null, null,               null,       null,              null, null),
   ('ctca', 'ctw', 'Cara Customer',   'customer',   null,   'cta', null,              '555-0201', null,              null, null),
-  ('ctz',  'cty', 'Zed Elsewhere',   'ibo',        null,   null, public.workspace_today('ctw') - 500, null,       null,              'IBO-SECRET-Z', null);
+  ('ctz',  'cty', 'Zed Elsewhere',   'ibo',        null,   null, app_private.workspace_today('ctw') - 500, null,       null,              'IBO-SECRET-Z', null);
 insert into auth.users (instance_id, id, aud, role, email)
 select '00000000-0000-0000-0000-000000000000', pg_temp.login(n), 'authenticated', 'authenticated', 'card-test-' || n || '@card.test'
   from generate_series(1, 8) n;
@@ -129,17 +129,17 @@ insert into public.list_entries (id, workspace_id, owner_id, name, customer_id) 
   ('cte_x', 'ctw', 'ctx', 'Entry Xray', null);
 -- The stored cards, each with a booked next step, a note and a column of its own: none of it may ever change here.
 insert into public.pipeline_cards (person_id, workspace_id, column_id, entered_at, next_column, next_step_date, next_step_time, note) values
-  ('ctpa', 'ctw', 'first_meeting', now() - interval '10 days', 'first_plan', public.workspace_today('ctw') + 3, time '10:30', 'card note A'),
-  ('ctpb', 'ctw', 'contact', now() - interval '3 days', 'first_meeting', public.workspace_today('ctw') + 1, null, null),
+  ('ctpa', 'ctw', 'first_meeting', now() - interval '10 days', 'first_plan', app_private.workspace_today('ctw') + 3, time '10:30', 'card note A'),
+  ('ctpb', 'ctw', 'contact', now() - interval '3 days', 'first_meeting', app_private.workspace_today('ctw') + 1, null, null),
   ('ctpx', 'ctw', 'first_plan', now() - interval '20 days', null, null, null, 'card note X');
 insert into public.customer_cards (entry_id, workspace_id, column_id, entered_at, next_column, next_step_date, next_step_time, note) values
-  ('cte_a', 'ctw', 'contact', now() - interval '5 days', 'first_meeting', public.workspace_today('ctw') + 2, time '14:00', 'entry note A'),
-  ('cte_b', 'ctw', 'first_meeting', now() - interval '8 days', 'first_sale', public.workspace_today('ctw') + 5, null, null);
+  ('cte_a', 'ctw', 'contact', now() - interval '5 days', 'first_meeting', app_private.workspace_today('ctw') + 2, time '14:00', 'entry note A'),
+  ('cte_b', 'ctw', 'first_meeting', now() - interval '8 days', 'first_sale', app_private.workspace_today('ctw') + 5, null, null);
 
 
 -- Tasks and notes, one or two on every card (inserted as the database owner: the guards skip these writes).
 insert into public.card_tasks (id, workspace_id, person_id, entry_id, title, done, done_at, done_by, due_date, due_time, assignee_id, position, created_by, created_at, updated_at) values
-  ('ta1',  'ctw', 'ctpa', null, 'Text Nik to confirm',  false, null, null, public.workspace_today('ctw') + 2, time '09:00', 'cta', 0, 'ctl', now() - interval '2 days', now() - interval '2 days'),
+  ('ta1',  'ctw', 'ctpa', null, 'Text Nik to confirm',  false, null, null, app_private.workspace_today('ctw') + 2, time '09:00', 'cta', 0, 'ctl', now() - interval '2 days', now() - interval '2 days'),
   ('ta2',  'ctw', 'ctpa', null, 'Send the deck',        true,  now() - interval '1 day', 'ctl', null, null, null, 1, 'cta', now() - interval '2 days', now() - interval '2 days'),
   ('tb1',  'ctw', 'ctpb', null, 'Invite to the session', false, null, null, null, null, 'ctb', 0, 'ctb', now() - interval '2 days', now() - interval '2 days'),
   ('tn1',  'ctw', 'ctpn', null, 'Ask about timing',     false, null, null, null, null, null, 0, 'ctn', now() - interval '2 days', now() - interval '2 days'),
@@ -500,9 +500,9 @@ select pg_temp.as_postgres();
 select is((select current_user = session_user or current_user = 'postgres'), true, 'this is the table owner');
 select is((select public.current_person_id()), null, 'with no signed-in person');
 insert into public.card_tasks (id, workspace_id, person_id, title, due_date, due_time, assignee_id)
-values ('mig-t1', 'ctw', 'ctpa', 'Book first plan', public.workspace_today('ctw') + 3, time '10:30', 'cta');
+values ('mig-t1', 'ctw', 'ctpa', 'Book first plan', app_private.workspace_today('ctw') + 3, time '10:30', 'cta');
 insert into public.card_tasks (id, workspace_id, entry_id, title, due_date, due_time, assignee_id, created_at, updated_at)
-values ('mig-t2', 'ctw', 'cte_a', 'Book first meeting', public.workspace_today('ctw') + 2, null, 'cta', '2026-01-01 10:00+00', '2026-01-02 10:00+00');
+values ('mig-t2', 'ctw', 'cte_a', 'Book first meeting', app_private.workspace_today('ctw') + 2, null, 'cta', '2026-01-01 10:00+00', '2026-01-02 10:00+00');
 select is((select (created_by is null, done, done_by is null, done_at is null, position, assignee_id, due_time)::text from public.card_tasks where id = 'mig-t1'),
   '(t,f,t,t,0,cta,10:30:00)', 'the owner role inserts a task on a recruiting card: created by the system (null), open, assigned to the owner');
 select is((select (created_by is null, created_at = '2026-01-01 10:00+00', updated_at = '2026-01-02 10:00+00')::text from public.card_tasks where id = 'mig-t2'),
@@ -549,7 +549,7 @@ delete from public.card_notes where id = 'cand-n';
 -- The boards are untouched --------------------------------------------------------------------------------------------------------
 select pg_temp.as_postgres();
 select is(pg_temp.board_state(), (select v from board_before), 'the stored cards, their columns and booked next steps are byte-identical after all of it');
-select is((select (next_column, next_step_date = public.workspace_today('ctw') + 3, next_step_time, note)::text from public.pipeline_cards where person_id = 'ctpa'),
+select is((select (next_column, next_step_date = app_private.workspace_today('ctw') + 3, next_step_time, note)::text from public.pipeline_cards where person_id = 'ctpa'),
           '(first_plan,t,10:30:00,"card note A")', 'a card''s booked next step reads as it was');
 
 -- Cascades --------------------------------------------------------------------------------------------------------------------------

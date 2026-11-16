@@ -41,7 +41,7 @@ end $$;
 
 -- The column ------------------------------------------------------------------
 -- Fixture: Carlos has a step booked (a stored booking, as the app no longer makes them).
-update public.pipeline_cards set next_column = 's-f1', next_step_date = public.workspace_today('w1') + 2
+update public.pipeline_cards set next_column = 's-f1', next_step_date = app_private.workspace_today('w1') + 2
   where person_id = '9';
 select pg_temp.login('4');
 select is((select c.next_column from public.pipeline_cards c where c.person_id = '9'), 's-f1',
@@ -61,10 +61,10 @@ select is(public.move_customer_card('le-4-1', 'referral_source', 'cmv-ref-1')->'
 select is(public.move_customer_card('le-4-1', 'contact', 'cmv-ref-2')->'move'->>'from_column',
   'referral_source', 'and a card moves on from it');
 select is(public.pipeline_milestone_index('out'), null, 'outcomes reach no milestone, so counts are unchanged');
-select is(array(select c.id from public.board_columns('customer', '4') c where c.band = 'out' order by c.ord),
+select is(array(select c.id from app_private.board_columns('customer', '4') c where c.band = 'out' order by c.ord),
   array['referral_source', 'not_interested', 'do_not_contact'],
   'Referral source comes first in the outcomes');
-select is((select c.kind from public.board_columns('recruiting', '4') c where c.id = 'referral_source'),
+select is((select c.kind from app_private.board_columns('recruiting', '4') c where c.id = 'referral_source'),
   'fixed', 'it is a fixed column on the recruiting board');
 
 -- Steps can't take it ---------------------------------------------------------
