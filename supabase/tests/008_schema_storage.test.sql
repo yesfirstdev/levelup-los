@@ -57,7 +57,8 @@ select ok(not has_function_privilege('authenticated', 'public.purge_expired_mess
   'clients cannot run the retention purge');
 select ok(not has_function_privilege('anon', 'public.create_dm(text)', 'execute'), 'anon cannot call create_dm');
 select ok(has_function_privilege('anon', 'public.get_invite(text)', 'execute'), 'anon can preview an invite');
-select ok(exists (select 1 from cron.job where jobname = 'purge-expired-messages'), 'the retention purge runs nightly (pg_cron)');
+-- This fork retains purge functions for explicit use, but never schedules permanent deletion.
+select ok(not exists (select 1 from cron.job where jobname in ('purge-expired-messages', 'purge-agent-housekeeping')), 'automatic permanent purges remain unscheduled in this fork');
 
 -- Storage ----------------------------------------------------------------------------
 select is((select public from storage.buckets where id = 'chat-media'), false, 'chat-media is private');
